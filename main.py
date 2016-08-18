@@ -9,7 +9,7 @@ STAT = {
     'EMAIL': 'bytecodedesigns@gmail.com',
     'PASSWORD': 'testpass1234',
     'ORDER_URL': "https://api.theprintful.com/orders",
-    'ORDER_COUNT': 18,
+    'ORDER_COUNT': 0,
     'EXP': 0,
     'SHIRT': 20,
     'TANK': 20,
@@ -31,13 +31,13 @@ def checkOrders():
     print(len(formatted))
     if STAT['ORDER_COUNT'] < len(formatted):
         unprocessed = len(formatted) - STAT['ORDER_COUNT']
-        for x in formatted:
-            if x['external_id']:
-                processItems(x['items'])
-            if unprocessed <= 0:
-                updateFirebase()
-                break
-            unprocessed -= 1
+        for index in range(0, unprocessed):
+            if formatted[index]['external_id']:
+                processItems(formatted[index]['items'])
+            STAT['ORDER_COUNT'] += 1
+        if unprocessed > 0:
+            updateFirebase()
+
     print(STAT['EXP'])
 
 def processItems(items):
@@ -53,7 +53,6 @@ def processItems(items):
         elif 'Sock' in item['name']:
             print("These are socks")
             addExp(STAT['SOCK'])
-    STAT['ORDER_COUNT'] += 1
 
 def addExp(addition):
     global STAT
@@ -66,14 +65,29 @@ def initFirebase():
     STAT['EXP'] = db.child("EXP").get(USER['idToken']).val()
 
 def updateFirebase():
+    print("UPDATE")
     global STAT, USER
     FIREBASE.auth().refresh(USER['refreshToken'])
     db = FIREBASE.database()
     db.update({'EXP': STAT['EXP']}, USER['idToken'])
+    writeData()
+
+def loadData():
+    global STAT
+    data = open('data.txt', 'r')
+    STAT['ORDER_COUNT'] = int(data.read())
+    data.close()
+
+def writeData():
+    text_file = open("data.txt", "w")
+    text_file.write("%s" % STAT['ORDER_COUNT'])
+    text_file.close()
+
 
 FIREBASE = pyrebase.initialize_app(FIREBASE_CONFIG)
 USER = FIREBASE.auth().sign_in_with_email_and_password(STAT['EMAIL'], STAT['PASSWORD'])
 while True:
+    loadData()
     initFirebase()
     checkOrders()
     sleep(900)
