@@ -76,4 +76,4 @@ USER = FIREBASE.auth().sign_in_with_email_and_password(STAT['EMAIL'], STAT['PASS
 while True:
     initFirebase()
     checkOrders()
-    sleep(10)
+    sleep(900)
