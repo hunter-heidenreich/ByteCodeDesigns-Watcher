@@ -27,7 +27,7 @@ def checkOrders():
     global STAT
     data = requests.get(STAT['ORDER_URL'], auth=HTTPBasicAuth(STAT['API_KEY_USER'], STAT['API_KEY_PASS']))
     formatted = data.json()['result']
-    print(len(formatted))
+    print("Order count: ", len(formatted))
     if STAT['ORDER_COUNT'] < len(formatted):
         unprocessed = len(formatted) - STAT['ORDER_COUNT']
         for index in range(0, unprocessed):
@@ -37,7 +37,7 @@ def checkOrders():
         if unprocessed > 0:
             updateFirebase()
 
-    print(STAT['EXP'])
+    print("EXP", STAT['EXP'])
 
 def processItems(items):
     global STAT
@@ -59,12 +59,12 @@ def addExp(addition):
 
 def initFirebase():
     global STAT, USER
-    FIREBASE.auth().refresh(USER['refreshToken'])
+    USER = FIREBASE.auth().refresh(USER['refreshToken'])
     db = FIREBASE.database()
     STAT['EXP'] = db.child("EXP").get(USER['idToken']).val()
 
 def updateFirebase():
-    print("UPDATE")
+    print("Updated orders.")
     global STAT, USER
     FIREBASE.auth().refresh(USER['refreshToken'])
     db = FIREBASE.database()
