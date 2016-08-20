@@ -20,8 +20,7 @@ FIREBASE_CONFIG = {
     'apiKey': "AIzaSyDDEhSlJDQK29tOZl57GVXM3rEE2ZypTSQ",
     'authDomain': "bytecode-designs.firebaseapp.com",
     'databaseURL': "https://bytecode-designs.firebaseio.com",
-    'storageBucket': "bytecode-designs.appspot.com",
-    "serviceAccount": "ByteCodeDesigns-f1bb2b287636.json"
+    'storageBucket': "bytecode-designs.appspot.com"
 }
 
 def checkOrders():
