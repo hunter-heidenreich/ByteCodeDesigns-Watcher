@@ -26,10 +26,11 @@ FIREBASE_CONFIG = {
 def checkOrders():
     global STAT
     data = requests.get(STAT['ORDER_URL'], auth=HTTPBasicAuth(STAT['API_KEY_USER'], STAT['API_KEY_PASS']))
-    formatted = data.json()['result']
-    print("Order count: ", len(formatted))
-    if STAT['ORDER_COUNT'] < len(formatted):
-        unprocessed = len(formatted) - STAT['ORDER_COUNT']
+    orderCount = data.json()['paging']['total']
+    print("Order count: ", orderCount)
+    if STAT['ORDER_COUNT'] < orderCount:
+        formatted = data.json()['result']
+        unprocessed = orderCount - STAT['ORDER_COUNT']
         for index in range(0, unprocessed):
             if formatted[index]['external_id']:
                 processItems(formatted[index]['items'])
