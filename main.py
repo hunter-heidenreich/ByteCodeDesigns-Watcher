@@ -13,6 +13,7 @@ STAT = {
     'EXP': 0,
     'SHIRT': 20,
     'TANK': 20,
+    'LEGGING': 20,
     'SOCK': 10
 }
 
@@ -53,6 +54,9 @@ def processItems(items):
         elif 'Sock' in item['name']:
             print("These are socks")
             addExp(STAT['SOCK'])
+        elif 'Leggings' in item['name']:
+            print("These are leggings")
+            addExp(STAT['LEGGING'])
 
 def addExp(addition):
     global STAT
