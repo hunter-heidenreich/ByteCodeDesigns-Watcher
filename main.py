@@ -4,13 +4,7 @@ from requests.auth import HTTPBasicAuth
 import pyrebase
 import pickle
 
-api = pickle.load(open('api.p', 'rb'))
-
 STAT = {
-    'API_KEY_USER': api['user'],
-    'API_KEY_PASS': api['passw'],
-    'EMAIL': 'bytecodedesigns@gmail.com',
-    'PASSWORD': 'testpass1234',
     'ORDER_URL': "https://api.theprintful.com/orders",
     'ORDER_COUNT': 0,
     'EXP': 0,
@@ -20,16 +14,14 @@ STAT = {
     'SOCK': 10
 }
 
-FIREBASE_CONFIG = {
-    'apiKey': "AIzaSyDDEhSlJDQK29tOZl57GVXM3rEE2ZypTSQ",
-    'authDomain': "bytecode-designs.firebaseapp.com",
-    'databaseURL': "https://bytecode-designs.firebaseio.com",
-    'storageBucket': "bytecode-designs.appspot.com"
-}
+PRINTFUL_CONFIG = pickle.load(open('api.p', 'rb'))
+FIREBASE_CONFIG = pickle.load(open('fb_conf.p', 'rb'))
+FIREBASE_LOGIN = pickle.load(open('fb_login.p', 'rb'))
+
 
 def checkOrders():
     global STAT
-    data = requests.get(STAT['ORDER_URL'], auth=HTTPBasicAuth(STAT['API_KEY_USER'], STAT['API_KEY_PASS']))
+    data = requests.get(STAT['ORDER_URL'], auth=HTTPBasicAuth(PRINTFUL_CONFIG['user'], PRINTFUL_CONFIG['passw']))
     orderCount = data.json()['paging']['total']
     print("Order count: ", orderCount)
     if STAT['ORDER_COUNT'] < orderCount:
@@ -92,7 +84,7 @@ def writeData():
 
 
 FIREBASE = pyrebase.initialize_app(FIREBASE_CONFIG)
-USER = FIREBASE.auth().sign_in_with_email_and_password(STAT['EMAIL'], STAT['PASSWORD'])
+USER = FIREBASE.auth().sign_in_with_email_and_password(FIREBASE_LOGIN['email'], FIREBASE_LOGIN['password'])
 while True:
     loadData()
     initFirebase()
