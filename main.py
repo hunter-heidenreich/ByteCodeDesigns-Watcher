@@ -2,10 +2,13 @@ from time import sleep
 import requests
 from requests.auth import HTTPBasicAuth
 import pyrebase
+import pickle
+
+api = pickle.load(open('api.p', 'rb'))
 
 STAT = {
-    'API_KEY_USER': "uhaszhvk-qpo4-kiya",
-    'API_KEY_PASS': "i9wd-qd093v3alhda",
+    'API_KEY_USER': api['user'],
+    'API_KEY_PASS': api['passw'],
     'EMAIL': 'bytecodedesigns@gmail.com',
     'PASSWORD': 'testpass1234',
     'ORDER_URL': "https://api.theprintful.com/orders",
