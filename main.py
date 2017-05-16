@@ -1,3 +1,5 @@
+# !/usr/bin/env python3
+
 from time import sleep
 import requests
 from requests.auth import HTTPBasicAuth
@@ -88,11 +90,11 @@ def write_data():
     text_file.write("%s" % STAT['ORDER_COUNT'])
     text_file.close()
 
-
-FIREBASE = pyrebase.initialize_app(FIREBASE_CONFIG)
-USER = FIREBASE.auth().sign_in_with_email_and_password(FIREBASE_LOGIN['email'], FIREBASE_LOGIN['password'])
-while True:
-    load_data()
-    init_firebase()
-    check_orders()
-    sleep(900)
+if __name__ == '__main__':
+    FIREBASE = pyrebase.initialize_app(FIREBASE_CONFIG)
+    USER = FIREBASE.auth().sign_in_with_email_and_password(FIREBASE_LOGIN['email'], FIREBASE_LOGIN['password'])
+    while True:
+        load_data()
+        init_firebase()
+        check_orders()
+        sleep(900)
